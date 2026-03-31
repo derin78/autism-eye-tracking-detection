@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Cheat Sheet - Autism Eye Tracking</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #fcfcfc;
+        }
+        h1 {
+            color: #1a4a80;
+            border-bottom: 3px solid #00d474;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        h2 {
+            color: #0f3460;
+            margin-top: 40px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #e94560;
+            margin-bottom: 10px;
+        }
+        p {
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+        ul {
+            margin-bottom: 15px;
+        }
+        li {
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        .highlight {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-left: 4px solid #1a4a80;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        .metrics-card {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin: 20px 0;
+        }
+        .bold-green {
+            color: #00b85c;
+            font-weight: bold;
+        }
+        .bold-red {
+            color: #e94560;
+            font-weight: bold;
+        }
+        .qa-box {
+            background-color: #2b2b2b;
+            color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .qa-box h2 {
+            color: #00d474;
+            border-bottom: 1px solid #555;
+        }
+        .qa-q {
+            font-weight: bold;
+            color: #f0c040;
+            margin-top: 15px;
+        }
+        .qa-a {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Autism Eye Tracking System<br><span style="font-size: 20px; color: #666; font-weight: normal;">Project Meeting & Presentation Cheat Sheet</span></h1>
+
+    <h2>1. The "Elevator Pitch" (What is the project?)</h2>
+    <div class="highlight">
+        "Our project is an Autism Screening tool that uses a standard webcam to analyze eye-tracking and gaze patterns. It presents the user with split-screen images (faces vs. objects) and uses computer vision and machine learning (a Random Forest classifier) to determine if their visual attention pattern aligns more with typical development or indicates a potential risk for Autism Spectrum Disorder (ASD)."
+    </div>
+
+    <h2>2. The Core Methodology (The Science)</h2>
+    <p>Our methodology is based on the <strong>Preferential Looking Paradigm</strong>, a well-established method in ASD research (pioneered by institutions like the UCSD Autism Center). When presented with a split-screen showing social stimuli (faces) and non-social stimuli (objects side-by-side):</p>
+    <ul>
+        <li><span class="bold-green">Typical pattern:</span> Naturally drawn to social information, looking at faces &gt; 55% of the time.</li>
+        <li><span class="bold-red">Atypical (ASD risk) pattern:</span> Reduced social visual attention, looking at faces &lt; 40-45% of the time.</li>
+    </ul>
+    <p>We use a <strong>10-image screening test</strong> because it is long enough to gather statistically significant gaze data, but short enough to maintain the user's attention throughout the test.</p>
+
+    <h2>3. The Technical Stack (How we built it)</h2>
+    <ul>
+        <li><strong>Language:</strong> Python</li>
+        <li><strong>Computer Vision:</strong> MediaPipe (Face Mesh for 468 precise 3D facial landmarks) and OpenCV (video capture).</li>
+        <li><strong>Machine Learning:</strong> Scikit-Learn (Random Forest Classifier).</li>
+        <li><strong>User Interface (GUI):</strong> CustomTkinter (for a modern, dark-mode medical application look).</li>
+        <li><strong>Data Handling:</strong> Pandas and NumPy (saving logs, extracting gaze features).</li>
+    </ul>
+
+    <h2>4. Key Features We Built</h2>
+    <ul>
+        <li><strong>GUI Control Panel:</strong> Fully functional application with live camera preview and device selection.</li>
+        <li><strong>9-Point Calibration:</strong> Maps eye position accurately to the screen coordinates.</li>
+        <li><strong>Screening Test:</strong> Displays stimuli fullscreen and tracks gaze automatically in the background.</li>
+        <li><strong>Machine Learning Classifier:</strong> Analyzes test data, returns a "Risk Score %", and categorizes the user.</li>
+        <li><strong>Automated Reports:</strong> Generates and saves printable text reports for the patient under their name.</li>
+        <li><strong>Analytics:</strong> Generates visual heatmaps and extracts gaze metrics (fixations, saccades, scanpath).</li>
+    </ul>
+
+    <div class="metrics-card">
+        <h2 style="margin-top: 0;">5. The ML Model & "Synthetic Data"</h2>
+        <p>Because we lacked access to clinical patient logs, and existing public datasets (like Kaggle) use incompatible hardware (expensive infrared trackers) and different video tests, we generated <strong>400 synthetic samples</strong> to train the model.</p>
+        <p><strong>What is "Mathematically Generated" Data?</strong><br>
+        Using Python's NumPy library, we wrote an algorithm to simulate test results based strictly on thresholds published in medical journals. For example, our algorithm constrained the 'Typical' group to randomly generate Face Attention Ratios between 55-85%, while constraining the 'Atypical' group to 15-45%. This allows us to train a robust Random Forest classifier without violating medical privacy or requiring clinical access.</p>
+        <p><strong>Evaluation Results:</strong></p>
+        <ul>
+            <li><strong>Accuracy:</strong> 94.75% (using 10-fold cross-validation)</li>
+            <li><strong>AUC-ROC:</strong> 0.995</li>
+            <li><strong>Top Feature:</strong> Face Attention Ratio</li>
+        </ul>
+    </div>
+
+    <h2>6. Limitations & Future Work</h2>
+    <p><em>(Be honest about limits—evaluators love this!)</em></p>
+    <ul>
+        <li><strong>Hardware Limit:</strong> We use a standard webcam/phone. While excellent for left/right tracking (face vs. object), it is not as pixel-perfect as a $2000 infrared eye tracker (e.g., Tobii).</li>
+        <li><strong>Data Limit:</strong> The ML model is a proof-of-concept trained on synthetic data based on research, not real hospital datasets.</li>
+        <li><strong>Scope Limit:</strong> It is a <em>screening tool</em>, not a diagnostic tool.</li>
+    </ul>
+
+    <div class="qa-box">
+        <h2 style="margin-top: 0;">🔥 Q&A Prep: Potential Supervisor Questions</h2>
+        
+        <p class="qa-q">Q: "Why did you use MediaPipe instead of standard OpenCV Haar Cascades for eye tracking?"</p>
+        <p class="qa-a"><strong>A:</strong> "MediaPipe Face Mesh is much faster, lighter, and more accurate for real-time tracking. It gives us 468 precise 3D facial landmarks, which allows us to pinpoint the exact iris center and calculate the Eye Aspect Ratio (EAR) for blinking much more reliably than older methods."</p>
+
+        <p class="qa-q">Q: "How exactly do you calculate where the user is looking?"</p>
+        <p class="qa-a"><strong>A:</strong> "We extract the iris landmarks and calculate their center relative to the eye corners. During calibration, we map these extreme iris positions to the edges of the screen. Then, during the test, we normalize the iris position to determine if they are looking at the left half or the right half of the screen."</p>
+    </div>
+
+</body>
+</html>

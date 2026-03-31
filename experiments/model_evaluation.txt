@@ -1,0 +1,29 @@
+MODEL EVALUATION RESULTS
+============================================================
+
+Model: Random Forest (100 trees, max_depth=5)
+Dataset: 400 synthetic samples
+
+10-Fold Cross-Validation:
+  Accuracy:   0.9475 (±0.0236)
+  Precision:  0.9551 (±0.0261)
+  Recall:     0.9400 (±0.0436)
+  F1 Score:   0.9468 (±0.0247)
+  AUC-ROC:    0.9955 (±0.0052)
+
+Train/Test Split (80/20):
+  Accuracy:   0.9625
+  Precision:  0.9744
+  Recall:     0.9500
+  F1 Score:   0.9620
+
+Confusion Matrix:
+  TN=39  FP=1
+  FN=2  TP=38
+
+Feature Importance:
+  face_attention_ratio            0.3715
+  object_fixation_count_norm      0.2160
+  saccade_count_norm              0.1744
+  gaze_variability                0.1481
+  face_fixation_count_norm        0.0900

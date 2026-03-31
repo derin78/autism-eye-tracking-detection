@@ -1,0 +1,60 @@
+============================================================
+  AUTISM EYE TRACKING SCREENING REPORT
+============================================================
+  Date: 2026-03-08 16:38:55
+  Session ID: 20260308_163748
+
+------------------------------------------------------------
+⚠️ IMPORTANT DISCLAIMER: This is a research screening tool ONLY.
+It does NOT provide a medical diagnosis of Autism Spectrum Disorder.
+Results should be interpreted by qualified professionals.
+Please consult a healthcare provider for proper evaluation.
+------------------------------------------------------------
+
+CLASSIFICATION RESULT
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Classification:     High Risk
+  Risk Score:         80.0%
+  Face Attention:     50.0%
+
+PER-IMAGE RESULTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #   Face Side   Samples    Face %   Object %
+  ---  ----------  --------    ------  ---------
+    1        left        74    100.0%       0.0%
+    2       right        73      0.0%     100.0%
+    3        left        75    100.0%       0.0%
+    4       right        73      0.0%     100.0%
+    5        left        73    100.0%       0.0%
+    6       right        76      0.0%     100.0%
+    7        left        71    100.0%       0.0%
+    8       right        75      0.0%     100.0%
+    9        left        75    100.0%       0.0%
+   10       right        76      0.0%     100.0%
+
+EXTRACTED FEATURES
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  face_attention_ratio                      0.5000
+  face_fixation_count_norm                  0.4966
+  object_fixation_count_norm                0.5034
+  saccade_count_norm                        0.5000
+  gaze_variability                          1.0000
+
+ADDITIONAL INFORMATION
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Total blinks during test:  10
+  ML classification:         High Risk
+  Threshold classification:  Typical
+  Raw data file:             data\test_results\test_20260308_163748.csv
+
+INTERPRETATION GUIDE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Typical:        Face attention > 55%, Risk score < 40%
+  Moderate Risk:  Face attention 35-55%, Risk score 40-65%
+  High Risk:      Face attention < 35%, Risk score > 65%
+
+  Higher face attention ratio indicates more typical gaze
+  patterns. Lower ratios may suggest atypical visual
+  attention patterns that warrant professional evaluation.
+
+============================================================

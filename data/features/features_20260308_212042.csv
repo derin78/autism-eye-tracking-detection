@@ -1,0 +1,2 @@
+session_duration_sec,total_samples,fixation_sample_count,fixation_ratio,fixation_count,fixation_mean_duration_sec,fixation_max_duration_sec,fixation_total_duration_sec,fixation_spatial_std_x,fixation_spatial_std_y,saccade_sample_count,saccade_ratio,saccade_count,saccade_mean_velocity,saccade_peak_velocity,saccade_mean_amplitude_px,scanpath_length_px,scanpath_ratio,blink_frame_count
+5.71,93,82,0.8817,6,0.7958,1.981,4.7751,9.03,2.92,0,0.0,0,0,0,0,63.71,0.0751,0
