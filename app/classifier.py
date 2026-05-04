@@ -102,6 +102,31 @@ FEATURE_NAMES = [
     "gaze_variability",
 ]
 
+# ═══════════════════════════════════════════════════════════════════
+# Age-stratified thresholds based on ASD gaze research
+# Source: Clinical studies on preferential looking paradigm across ages
+# ═══════════════════════════════════════════════════════════════════
+AGE_GROUPS = [
+    # (max_age, label,           typical_threshold, high_risk_threshold)
+    (3,  "Toddler (1–3 yrs)",   0.68,              0.40),
+    (12, "Child (4–12 yrs)",    0.60,              0.35),
+    (17, "Teenager (13–17 yrs)",0.55,              0.33),
+    (99, "Adult (18+ yrs)",     0.52,              0.30),
+]
+
+
+def get_age_group(age):
+    """
+    Return (group_label, typical_threshold, high_risk_threshold)
+    for a given age (int). Falls back to Adult norms if age is None.
+    """
+    if age is None:
+        return "Adult (18+ yrs)", 0.52, 0.30
+    for max_age, label, typical_thresh, high_risk_thresh in AGE_GROUPS:
+        if age <= max_age:
+            return label, typical_thresh, high_risk_thresh
+    return "Adult (18+ yrs)", 0.52, 0.30
+
 
 class AutismGazeClassifier:
     """
@@ -181,15 +206,23 @@ class AutismGazeClassifier:
 
         return features
 
-    def classify(self, test_results):
+    def classify(self, test_results, age=None):
         """
         Run classification on test results.
+
+        Parameters
+        ----------
+        age : int or None
+            Subject's age in years. Used to apply age-appropriate
+            face attention thresholds. Defaults to adult norms if None.
 
         Returns
         -------
         dict with:
             risk_score (0–100): probability of atypical pattern
             classification: "Typical" / "Moderate Risk" / "High Risk"
+            age_group: label for the matched age group
+            age_typical_threshold: the typical face attention % for this age
             features: extracted feature values
             feature_names: corresponding names
             disclaimer: medical disclaimer text
@@ -198,15 +231,19 @@ class AutismGazeClassifier:
         if features is None:
             return {"error": "No valid test data", "disclaimer": self.DISCLAIMER}
 
+        # Get age-appropriate thresholds
+        age_group_label, typical_thresh, high_risk_thresh = get_age_group(age)
+
         X_scaled = self.scaler.transform(features)
         proba = self.clf.predict_proba(X_scaled)[0]  # [prob_typical, prob_atypical]
         risk_score = proba[1] * 100  # Probability of atypical
 
-        # Also use threshold-based classification as a cross-check
+        # Age-adjusted threshold-based classification
         face_ratio = test_results["overall_face_attention_ratio"]
-        if face_ratio < config.RISK_THRESHOLD_HIGH:
+        moderate_thresh = (typical_thresh + high_risk_thresh) / 2
+        if face_ratio < high_risk_thresh:
             threshold_class = "High Risk"
-        elif face_ratio < config.RISK_THRESHOLD_MODERATE:
+        elif face_ratio < moderate_thresh:
             threshold_class = "Moderate Risk"
         else:
             threshold_class = "Typical"
@@ -230,6 +267,9 @@ class AutismGazeClassifier:
             "ml_classification": ml_class,
             "threshold_classification": threshold_class,
             "face_attention_ratio": face_ratio,
+            "age_group": age_group_label,
+            "age_typical_threshold": typical_thresh,
+            "age_high_risk_threshold": high_risk_thresh,
             "features": features[0].tolist(),
             "feature_names": FEATURE_NAMES,
             "disclaimer": self.DISCLAIMER,

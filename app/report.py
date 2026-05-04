@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import config
 
 
-def generate_report(test_results, classification_results, save=True, subject_name=""):
+def generate_report(test_results, classification_results, save=True, subject_name="", subject_age=None):
     """
     Generate a text report from test and classification results.
 
@@ -18,6 +18,8 @@ def generate_report(test_results, classification_results, save=True, subject_nam
     ----------
     subject_name : str
         Name of the test subject for report identification.
+    subject_age : int or None
+        Age of the subject in years.
 
     Returns the report as a string and optionally saves to file.
     """
@@ -29,7 +31,10 @@ def generate_report(test_results, classification_results, save=True, subject_nam
     lines.append("=" * 60)
     lines.append(f"  Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     if subject_name:
-        lines.append(f"  Subject: {subject_name}")
+        lines.append(f"  Subject:  {subject_name}")
+    if subject_age is not None:
+        age_group = classification_results.get("age_group", "")
+        lines.append(f"  Age:      {subject_age} years  ({age_group})")
     lines.append(f"  Session ID: {ts}")
     lines.append("")
 
@@ -89,9 +94,20 @@ def generate_report(test_results, classification_results, save=True, subject_nam
     # ── Interpretation Guide ──
     lines.append("INTERPRETATION GUIDE")
     lines.append("~" * 40)
-    lines.append("  Typical:        Face attention > 55%, Risk score < 40%")
-    lines.append("  Moderate Risk:  Face attention 35-55%, Risk score 40-65%")
-    lines.append("  High Risk:      Face attention < 35%, Risk score > 65%")
+    # Show age-specific norms if available
+    typ_thresh = classification_results.get("age_typical_threshold")
+    hr_thresh = classification_results.get("age_high_risk_threshold")
+    age_group = classification_results.get("age_group", "")
+    if typ_thresh is not None and hr_thresh is not None:
+        mod_thresh = (typ_thresh + hr_thresh) / 2
+        lines.append(f"  Age Group: {age_group}")
+        lines.append(f"  Typical:        Face attention > {typ_thresh:.0%}")
+        lines.append(f"  Moderate Risk:  Face attention {mod_thresh:.0%} – {typ_thresh:.0%}")
+        lines.append(f"  High Risk:      Face attention < {hr_thresh:.0%}")
+    else:
+        lines.append("  Typical:        Face attention > 55%, Risk score < 40%")
+        lines.append("  Moderate Risk:  Face attention 35-55%, Risk score 40-65%")
+        lines.append("  High Risk:      Face attention < 35%, Risk score > 65%")
     lines.append("")
     lines.append("  Higher face attention ratio indicates more typical gaze")
     lines.append("  patterns. Lower ratios may suggest atypical visual")

@@ -1,2 +1,17 @@
 .venv/
 __pycache__/
+*.pyc
+
+# PyInstaller build output (too large for GitHub)
+build/
+dist/
+
+# Generated data files (personal test data)
+data/test_results/
+data/processed/
+data/features/
+data/raw/
+
+# Generated outputs
+experiments/heatmap_*.png
+experiments/model_evaluation.txt

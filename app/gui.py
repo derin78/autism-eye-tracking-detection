@@ -531,6 +531,16 @@ class AutismEyeApp(ctk.CTk):
             return
         subject_name = subject_name.strip()
 
+        # Ask for subject age BEFORE starting (optional)
+        age_dialog = ctk.CTkInputDialog(
+            text="Enter the subject's age (years):\n(Press OK to skip)",
+            title="Subject Age"
+        )
+        age_input = age_dialog.get_input()
+        subject_age = None
+        if age_input and age_input.strip().isdigit():
+            subject_age = int(age_input.strip())
+
         was_tracking = self._tracking
         if was_tracking:
             self._on_stop_tracking()
@@ -560,12 +570,12 @@ class AutismEyeApp(ctk.CTk):
                     self._send_msg(action="show_window")
                     return
 
-                # Classify
+                # Classify with age
                 classifier = AutismGazeClassifier()
-                classification = classifier.classify(results)
+                classification = classifier.classify(results, age=subject_age)
 
-                # Generate report with subject name
-                generate_report(results, classification, subject_name=subject_name)
+                # Generate report with subject name and age
+                generate_report(results, classification, subject_name=subject_name, subject_age=subject_age)
 
                 # Store results
                 self._last_test_results = classification
@@ -583,11 +593,17 @@ class AutismEyeApp(ctk.CTk):
                 else:
                     result_color = RED
 
+                age_group = classification.get("age_group", "")
+                age_line = f"Age: {subject_age} yrs ({age_group})\n" if subject_age else ""
+                typ_thresh = classification.get("age_typical_threshold", 0.55)
+
                 result_text = (
                     f"Subject: {subject_name}\n"
+                    f"{age_line}"
                     f"Classification: {cls_label}\n"
                     f"Risk Score: {risk:.1f}%\n"
                     f"Face Attention: {face_ratio:.1%}\n"
+                    f"(Typical for age: >{typ_thresh:.0%})\n"
                     f"Blinks: {blinks}\n\n"
                     f"Report saved to\nexperiments/reports/\n\n"
                     f"⚠️ Research tool only.\n"
